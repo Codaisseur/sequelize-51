@@ -1,4 +1,25 @@
 const User = require('./models').user;
+const TodoList = require('./models').todoList;
+
+const userWithLists = async (id) => {
+  try {
+    // query todoLists where userId === id
+    // query user findByPk with id
+
+    const user = await User.findByPk(id, {
+      attributes: ['name', 'email'],
+      include: [{ model: TodoList, attributes: ['name'] }],
+    })
+
+    console.log(user.dataValues.todoLists)
+
+  } catch(e) {
+    console.log(e.message);
+  }
+}
+
+userWithLists(1);
+
 
 // Read:
 // .findAll => []
@@ -73,4 +94,4 @@ const deleteUserById = async (id) => {
   }
 }
 
-deleteUserById(4);
+// deleteUserById(4);

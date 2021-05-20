@@ -10,24 +10,17 @@ router.post('/login', async (req, res, next) => {
     const { email, password } = req.body;
 
     // Find the user .findAll .findOne with the email
-    
     const user = await User.findOne({ where: { email: email }});
-
+    // i have the user
     if(!user) {
       return res.status(400).send("Wrong credentials");
     }
-    // i have the user
-    
     // check if parameter password === stored password
-
     const validPassword = password === user.dataValues.password; // without encrypting password
-
-    // const validEncryptedPassword = bcrypt.compareSync(password, user.password);
 
     // if all good => create token and send back
     if (validPassword) {
       console.log("Valid!!");
-
       // Create a token for this guy!
       const token = toJWT({ userId: user.id }); // data = { userId: 1 };
       res.send({ message: "Wooo you're logged in", token });

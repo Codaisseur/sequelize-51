@@ -7,6 +7,9 @@ const app = express()
 
 // Middlewares
 app.use(express.json()); // body-parser middleware;
+// POST -> body { name,  email }
+
+
 
 // Routers
 app.use('/users', userRouter); // routes about users

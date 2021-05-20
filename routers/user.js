@@ -3,19 +3,47 @@ const User = require('../models').user;
 
 const router = new Router();
 
-router.get('/', async (request, response) => {
+
+const loggingMiddleware = (request, response, next) => {
+  console.log("I got a request!!", request.method, request.headers, new Date())
+  next();
+}
+
+
+const failRandom = (req, res, next) => {
+  const fail = Math.random() * 10
+  if (fail > 1) {
+    res.status(401).send("")
+  } else {
+    next()
+  }
+}
+
+// Route level middlewares => only apply to this route
+router.get('/', failRandom, async (request, response, next) => {
   try {
     console.log("Hi from the router")
 
     const allUsers = await User.findAll();
     response.send(allUsers)
   } catch(e) {
-    console.log(e.message);
+    next(e)
   }
 })
 
+
+
+
 router.get('/:id', async (request, response, next) => {
   try {
+
+    // check the request headers
+    // get the token from the request
+    // check the user table to see if he exists
+    //  check token to see its valid
+
+
+
     const userId = parseInt(request.params.id);
     console.log(userId);
     const user = await User.findByPk(userId);

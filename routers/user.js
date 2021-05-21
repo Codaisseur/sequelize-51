@@ -1,7 +1,11 @@
 const { Router } = require('express');
 const User = require('../models').user;
+const authMiddleware = require('../auth/middleware');
+const TodoList = require('../models').todoList;
 
 const router = new Router();
+
+
 
 
 const loggingMiddleware = (request, response, next) => {
@@ -20,11 +24,12 @@ const failRandom = (req, res, next) => {
 }
 
 // Route level middlewares => only apply to this route
-router.get('/', failRandom, async (request, response, next) => {
+router.get('/', authMiddleware, async (request, response, next) => {
   try {
-    console.log("Hi from the router")
 
-    const allUsers = await User.findAll();
+    console.log("Who's making this request?", request.user);
+
+    const allUsers = await User.findAll({ include: [TodoList] });
     response.send(allUsers)
   } catch(e) {
     next(e)
